@@ -12,7 +12,7 @@ export default function TodoInput(props) {
                     setTodoValue(e.target.value)
                 }}
                 onKeyDown={(e) => {
-                    if (e.key === 'Enter' && todoValue.trim() !== '') {
+                    if (e.key === 'Enter') {
                         handleAddTodos(todoValue);
                         setTodoValue('');
                     }
