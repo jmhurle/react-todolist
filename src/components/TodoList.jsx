@@ -5,7 +5,10 @@ export default function TodoList(props) {
     const {todos, editIndex, editingValue, setEditingValue, handleFinishEditing} = props;
 
     return (
-        <ul className='main'>
+        <ul 
+            className='main' 
+            style={{marginLeft: '30%'}}
+        >
             {todos.map((todo, todoIndex) => {
                     if (todoIndex !== editIndex) {
                         return (

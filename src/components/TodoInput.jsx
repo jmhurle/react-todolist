@@ -4,10 +4,10 @@ export default function TodoInput(props) {
     const {handleAddTodos, todoValue, setTodoValue} = props;
 
     return (
-        <header>
+        <header style={{marginLeft: '30%'}}>
             <input 
                 value={todoValue} 
-                placeholder="Enter todo..."
+                placeholder="Add item..."
                 onChange={(e) => {
                     setTodoValue(e.target.value)
                 }}

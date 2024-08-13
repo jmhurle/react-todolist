@@ -43,19 +43,22 @@ header input {
   width: 100%;
 }
 
-header button {
+header button,
+.list_button {
   border-radius: 14px;
   background: transparent;
   transition-duration: 200ms;
   cursor: pointer;
 }
 
-header button:hover {
+header button:hover,
+.list_button:hover {
   opacity: 0.7;
 }
 
 header button,
-header input {
+header input,
+.list_button {
   padding: 14px 18px;
   border: none;
   outline: none;
@@ -113,6 +116,21 @@ button i {
 
 .actionsContainer button:hover {
   opacity: 0.7;
+}
+
+.titleInput {
+  max-width: 500px;
+  margin-left: 40%;
+  margin-top: 30px;
+}
+
+.titleInput input {
+  text-align: center;
+}
+
+.list_button {
+  font-family: 'Inter', sans-serif;
+  font-size: 0.9rem;
 }
 
 
