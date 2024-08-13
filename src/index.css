@@ -120,7 +120,7 @@ button i {
 
 .titleInput {
   max-width: 500px;
-  margin-left: 40%;
+  margin-left: 35%;
   margin-top: 30px;
 }
 
@@ -132,6 +132,34 @@ button i {
   font-family: 'Inter', sans-serif;
   font-size: 0.9rem;
 }
+
+/* Hide the default checkbox */
+.check {
+  appearance: none;
+  width: 30px;
+  height: 30px;
+  border-radius: 40%;
+  background-color: rgb(197, 221, 251);
+  cursor: pointer;
+  position: relative;
+  outline: none;
+  margin: 0;
+  padding: 0;
+}
+
+/* Style for the checked state */
+.check:checked::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 15px;
+  height: 15px;
+  background-color: white;
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+}
+
 
 
 

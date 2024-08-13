@@ -7,7 +7,7 @@ import TodoList from "./components/TodoList"
 
 function App() {
   const [lists, setLists] = useState([]);
-  const [activeList, setActiveList] = useState({title: "List 01", items: []})
+  const [activeList, setActiveList] = useState({title: "List 01", items: [], completed: []})
 
   const [titleValue, setTitleValue] = useState('')
   const [itemValue, setItemValue] = useState('')
@@ -19,18 +19,29 @@ function App() {
   }
 
   function handleAddTodos(newItem) {
-    const newList = {title: `${activeList.title}`, items: [...activeList.items, newItem]}
+    const newList = {title: `${activeList.title}`, items: [...activeList.items, newItem], completed: [...activeList.completed]}
     setActiveList(newList)
     const newLists = [newList, ...lists.filter(list => list.title !== newList.title)]
     persistData(newLists)
     setLists(newLists)
   }
 
-  function handleDeleteTodo(index) {
-    const newListItems = activeList.items.filter((todo, todoIndex) => {
-      return todoIndex !== index;
-    })
-    const newList = {title: `${activeList.title}`, items: newListItems}
+  function handleDeleteTodo(index, location) {
+    let newList;
+    if (location === 'items') {
+      const newListItems = activeList.items.filter((todo, todoIndex) => {
+        return todoIndex !== index;
+      })
+      newList = {title: activeList.title, items: newListItems, completed: activeList.completed}
+  
+    }
+    else {
+      const newListCompleted = activeList.completed.filter((todo, todoIndex) => {
+        return todoIndex !== index;
+      })
+      newList = {title: `${activeList.title}`, items: activeList.items, completed: newListCompleted}
+    }
+
     setActiveList(newList)
     const newLists = [newList, ...lists.filter(list => list.title !== newList.title)]
     persistData(newLists)
@@ -45,7 +56,7 @@ function App() {
   function handleFinishEditing(newValue, index) {
     const newListItems = [...activeList.items];
     newListItems[index] = newValue;
-    const newList = {title: `${activeList.title}`, items: newListItems}
+    const newList = {title: `${activeList.title}`, items: newListItems, completed: activeList.completed}
 
     setActiveList(newList)
     const newLists = [newList, ...lists.filter(list => list.title !== newList.title)]
@@ -58,7 +69,7 @@ function App() {
 
   function changeActiveTitle(newTitle) {
     const prevTitle = activeList.title;
-    const newList = {title: newTitle, items: [...activeList.items]};
+    const newList = {title: newTitle, items: [...activeList.items], completed: [...activeList.completed]};
 
     const newLists = [newList, ...lists.filter(list => list.title !== prevTitle)];
 
@@ -68,6 +79,11 @@ function App() {
   }
 
   function handleAddList(title) {
+    if (lists.some(list => list.title === title)) {
+      alert('A list with this name already exists!')
+      return
+    }
+
     const listNumbers = lists.map(list => {
       const match = list.title.match(/^List (\d{2})$/);
       return match ? parseInt(match[1], 10) : null;
@@ -80,7 +96,8 @@ function App() {
     
     const newList = {
       title: newListTitle,
-      items: []
+      items: [],
+      completed: []
     };
 
     setActiveList(newList);
@@ -92,9 +109,9 @@ function App() {
   function handleDeleteList(index) {
     const toDeleteTitle = lists[index].title;
 
-    const newLists = lists.filter((list, listIndex) => {
+    const newLists = [...lists.filter((list, listIndex) => {
       return listIndex !== index;
-    })
+    })]
 
     setLists(newLists)
     if (toDeleteTitle === activeList.title) {
@@ -102,6 +119,36 @@ function App() {
     }
 
     persistData(newLists)
+  }
+
+  function handleCheckItem(index) {
+    const item = activeList.items[index];
+    const newListItems = activeList.items.filter((todo, todoIndex) => {return todoIndex !== index})
+    const newCompleted = [...activeList.completed, item];
+    const newList = {
+      title: activeList.title,
+      items: newListItems,
+      completed: newCompleted
+    }
+    setActiveList(newList)
+    const newLists = [newList, ...lists.filter(list => list.title !== prevTitle)];
+    persistData(newLists);
+    setLists(newLists);
+  }
+
+  function handleUncheckItem(index) {
+    const item = activeList.completed[index];
+    const newCompleted = activeList.completed.filter((todo, todoIndex) => {return todoIndex !== index})
+    const newItems = [...activeList.items, item];
+    const newList = {
+      title: activeList.title,
+      items: newItems,
+      completed: newCompleted
+    }
+    setActiveList(newList)
+    const newLists = [newList, ...lists.filter(list => list.title !== prevTitle)];
+    persistData(newLists);
+    setLists(newLists);
   }
 
   useEffect(() => {
@@ -115,7 +162,7 @@ function App() {
     }
     localLists = JSON.parse(localLists).lists;
     setLists(localLists);
-    setActiveList(localLists.length ? localLists[0] : {title: "List 01", items: []});
+    setActiveList(localLists.length ? localLists[0] : {title: "List 01", items: [], completed: []});
   }, [])
 
   return (
@@ -144,7 +191,23 @@ function App() {
         editingValue={editingValue} 
         setEditingValue={setEditingValue} 
         handleDeleteTodo={handleDeleteTodo} 
-        todos={activeList.items} 
+        todos={activeList.items}
+        isCompleted={false}
+        handleCheckItem={handleCheckItem}
+        handleUncheckItem={handleUncheckItem}
+      />
+      <div style={{marginTop: '60px'}}></div>
+      <TodoList 
+        handleEditTodo={handleEditTodo} 
+        handleFinishEditing={handleFinishEditing} 
+        editIndex={editIndex} 
+        editingValue={editingValue} 
+        setEditingValue={setEditingValue} 
+        handleDeleteTodo={handleDeleteTodo} 
+        todos={activeList.completed}
+        isCompleted={true}
+        handleCheckItem={handleCheckItem}
+        handleUncheckItem={handleUncheckItem}
       />
     </>
   )

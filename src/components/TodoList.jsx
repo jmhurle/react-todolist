@@ -2,7 +2,7 @@ import React from 'react'
 import TodoCard from './TodoCard'
 
 export default function TodoList(props) {
-    const {todos, editIndex, editingValue, setEditingValue, handleFinishEditing} = props;
+    const {todos, editIndex, editingValue, setEditingValue, handleFinishEditing, isCompleted } = props;
 
     return (
         <ul 
@@ -10,7 +10,7 @@ export default function TodoList(props) {
             style={{marginLeft: '30%'}}
         >
             {todos.map((todo, todoIndex) => {
-                    if (todoIndex !== editIndex) {
+                    if (todoIndex !== editIndex || isCompleted) {
                         return (
                             <TodoCard {...props} index={todoIndex} key={todoIndex}>
                                 <p>{todo}</p>
